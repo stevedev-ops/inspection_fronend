@@ -88,31 +88,31 @@ export default function AddStaffModal({ isOpen, onClose, onComplete, creatorRole
               required 
               value={formData.full_name}
               onChange={e => setFormData({...formData, full_name: e.target.value})}
-              className="w-full border border-slate-200 rounded p-2 text-sm"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="John Doe"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Staff ID / Payroll #</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Staff ID / Payroll #</label>
             <input 
               type="text" 
               required 
               value={formData.staff_id}
               onChange={e => setFormData({...formData, staff_id: e.target.value})}
-              className="w-full border border-slate-200 rounded p-2 text-sm"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="NCC-XXXX"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Email (Auth Login)</label>
+          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email (Auth Login)</label>
           <input 
             type="email" 
             required 
             value={formData.email}
             onChange={e => setFormData({...formData, email: e.target.value})}
-            className="w-full border border-slate-200 rounded p-2 text-sm"
+            className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
             placeholder="jdoe@nairobi.go.ke"
           />
         </div>
@@ -120,24 +120,24 @@ export default function AddStaffModal({ isOpen, onClose, onComplete, creatorRole
         {creatorRole === 'super_admin' && (
           <div className="grid grid-cols-2 gap-4 fade-in">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Company Name</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company Name</label>
               <input 
                 type="text" 
                 required 
                 value={formData.company_name}
                 onChange={e => setFormData({...formData, company_name: e.target.value})}
-                className="w-full border border-slate-200 rounded p-2 text-sm"
+                className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
                 placeholder="e.g. Nairobi Pest Solvers"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Company Official Email</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company Official Email</label>
               <input 
                 type="email" 
                 required 
                 value={formData.company_email}
                 onChange={e => setFormData({...formData, company_email: e.target.value})}
-                className="w-full border border-slate-200 rounded p-2 text-sm"
+                className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
                 placeholder="ops@nairobiltd.com"
               />
             </div>
@@ -145,13 +145,13 @@ export default function AddStaffModal({ isOpen, onClose, onComplete, creatorRole
         )}
 
         <div>
-          <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Initial Password</label>
+          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Initial Password</label>
           <input 
             type="password" 
             required 
             value={formData.password}
             onChange={e => setFormData({...formData, password: e.target.value})}
-            className="w-full border border-slate-200 rounded p-2 text-sm"
+            className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
             placeholder="Minimum 6 chars..."
             minLength={6}
           />
@@ -159,24 +159,24 @@ export default function AddStaffModal({ isOpen, onClose, onComplete, creatorRole
 
         <div className={`grid gap-4 ${creatorRole === 'super_admin' ? 'grid-cols-1' : 'grid-cols-2'}`}>
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">System Role</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">System Role</label>
             <select 
               value={formData.role}
               onChange={e => setFormData({...formData, role: e.target.value})}
-              className="w-full border border-slate-200 rounded p-2 text-sm"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none"
             >
               {roleOptions.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
             </select>
           </div>
           {creatorRole !== 'super_admin' && (
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
               Primary Subcounty
             </label>
             <select 
               value={formData.subcounty}
               onChange={e => setFormData({...formData, subcounty: e.target.value})}
-              className="w-full border border-slate-200 rounded p-2 text-sm"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none"
             >
               <option value="">
                 {isZoneRequired ? '-- Select Subcounty --' : '-- No Specific Subcounty --'}

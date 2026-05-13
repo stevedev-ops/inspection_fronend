@@ -103,52 +103,52 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
               disabled={!isCreator}
               value={formData.full_name}
               onChange={e => setFormData({...formData, full_name: e.target.value})}
-              className="w-full border border-slate-200 rounded p-2 text-sm disabled:bg-slate-50"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100 disabled:text-slate-500"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Staff ID / Payroll</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Staff ID / Payroll</label>
             <input 
               type="text" 
               disabled={!isCreator}
               value={formData.department}
               onChange={e => setFormData({...formData, department: e.target.value})}
-              className="w-full border border-slate-200 rounded p-2 text-sm disabled:bg-slate-50"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100 disabled:text-slate-500"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Email Address</label>
+          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email Address</label>
           <input 
             type="email" 
             disabled={!isCreator}
             value={formData.email}
             onChange={e => setFormData({...formData, email: e.target.value})}
-            className="w-full border border-slate-200 rounded p-2 text-sm disabled:bg-slate-50"
+            className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100 disabled:text-slate-500"
           />
         </div>
 
         {staff?.role === 'admin' && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Company Name</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company Name</label>
               <input 
                 type="text" 
                 disabled={!isCreator}
                 value={formData.company_name}
                 onChange={e => setFormData({...formData, company_name: e.target.value})}
-                className="w-full border border-slate-200 rounded p-2 text-sm disabled:bg-slate-50"
+                className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100 disabled:text-slate-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Company Email</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company Email</label>
               <input 
                 type="email" 
                 disabled={!isCreator}
                 value={formData.company_email}
                 onChange={e => setFormData({...formData, company_email: e.target.value})}
-                className="w-full border border-slate-200 rounded p-2 text-sm disabled:bg-slate-50"
+                className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100 disabled:text-slate-500"
               />
             </div>
           </div>
@@ -156,12 +156,12 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
 
         {staff?.role !== 'admin' && staff?.role !== 'finance_manager' && (
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Assigned Subcounty</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Assigned Subcounty</label>
             <select 
               disabled={!isCreator}
               value={formData.subcounty}
               onChange={e => setFormData({ ...formData, subcounty: e.target.value })}
-              className="w-full border border-slate-200 rounded p-2 bg-white text-sm disabled:bg-slate-50"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100"
             >
               <option value="">-- No Specific Subcounty --</option>
               {zones.map(z => <option key={z} value={z}>{z}</option>)}
@@ -171,24 +171,24 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
 
         {(staff?.role === 'admin' || staff?.role === 'finance_manager') && (
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Regional Scope</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Regional Scope</label>
             <input 
               type="text" 
               disabled 
               value="All Regions (Global)"
-              className="w-full border border-slate-200 rounded p-2 text-sm bg-slate-50 text-slate-500 font-bold"
+              className="w-full border border-slate-300 bg-slate-100 rounded p-2 text-sm text-slate-600 font-bold"
             />
           </div>
         )}
 
         {staff?.role === 'pho' && (
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Assigned NCCG Officer</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Assigned NCCG Officer</label>
             <select 
               disabled={!isCreator}
               value={formData.assigned_nccg}
               onChange={e => setFormData({ ...formData, assigned_nccg: e.target.value })}
-              className="w-full border border-slate-200 rounded p-2 bg-white text-sm disabled:bg-slate-50"
+              className="w-full border border-slate-300 bg-slate-50 rounded p-2 text-sm text-slate-900 focus:bg-white outline-none disabled:bg-slate-100"
             >
               <option value="">-- Unassigned --</option>
               {nccgs.map(n => <option key={n.id} value={n.id}>{n.full_name}</option>)}
