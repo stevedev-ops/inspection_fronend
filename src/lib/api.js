@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://inspection-backend-3bdb.onrender.com';
 
 export const setTokens = (access, refresh) => {
     localStorage.setItem('access_token', access);
