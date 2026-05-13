@@ -22,7 +22,7 @@ export default function Modal({ isOpen, onClose, title, children }) {
         
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-          <h2 className="text-lg font-bold text-slate-800 m-0">{title}</h2>
+          <h2 className="text-lg font-black text-slate-900 m-0">{title}</h2>
           <button 
             onClick={onClose}
             className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition-colors"

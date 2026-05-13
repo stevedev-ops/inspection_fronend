@@ -97,7 +97,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Full Name</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name</label>
             <input 
               type="text" 
               disabled={!isCreator}
@@ -107,7 +107,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Staff ID / Payroll</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Staff ID / Payroll</label>
             <input 
               type="text" 
               disabled={!isCreator}
@@ -119,7 +119,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email Address</label>
+          <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address</label>
           <input 
             type="email" 
             disabled={!isCreator}
@@ -132,7 +132,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
         {staff?.role === 'admin' && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company Name</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Company Name</label>
               <input 
                 type="text" 
                 disabled={!isCreator}
@@ -142,7 +142,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company Email</label>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Company Email</label>
               <input 
                 type="email" 
                 disabled={!isCreator}
@@ -156,7 +156,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
 
         {staff?.role !== 'admin' && staff?.role !== 'finance_manager' && (
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Assigned Subcounty</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Assigned Subcounty</label>
             <select 
               disabled={!isCreator}
               value={formData.subcounty}
@@ -171,7 +171,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
 
         {(staff?.role === 'admin' || staff?.role === 'finance_manager') && (
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Regional Scope</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Regional Scope</label>
             <input 
               type="text" 
               disabled 
@@ -183,7 +183,7 @@ export default function StaffEditModal({ staff, isOpen, onClose, onComplete }) {
 
         {staff?.role === 'pho' && (
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Assigned NCCG Officer</label>
+            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Assigned NCCG Officer</label>
             <select 
               disabled={!isCreator}
               value={formData.assigned_nccg}
