@@ -54,6 +54,13 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
   const [searchError, setSearchError] = useState('');
   useEffect(() => {
     if (initialData) {
+      setInspectionId(initialData.id);
+      setFormData(prev => ({ 
+        ...prev, 
+        ...initialData,
+        client_id: initialData.business_id || initialData.business,
+        _clientObj: initialData.business || initialData.businesses
+      }));
       setStep(2); 
     }
   }, [initialData]);
@@ -258,7 +265,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
         return;
       }
 
-      if (actionPhase === 'step7') {
+      if (actionPhase === 'step8') {
         const fullRecord = await apiFetch(`/inspections/inspections/${createdId}/`);
         if (fullRecord) {
           let alertMsg = 'Finance details submitted to NCCG for approval!';
@@ -313,11 +320,11 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
 
   const submitDraft = () => submitReport('draft');
   const submitFinalStep6 = () => submitReport('step6');
-  const submitFinalStep7 = () => submitReport('step7');
+  const submitFinalStep8 = () => submitReport('step8');
 
   return (
     <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl max-w-xl mx-auto mb-10 text-white">
-       <h2 className="text-xl font-bold mb-4 text-emerald-400">Step {step} of 7</h2>
+       <h2 className="text-xl font-bold mb-4 text-emerald-400">Step {step} of 8</h2>
        {loading && (
          <div className="mb-4 p-3 bg-emerald-900/20 border border-emerald-500/50 rounded-lg text-xs uppercase tracking-wider font-bold text-emerald-300">
            Saving report...
@@ -633,14 +640,45 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
          <div className="space-y-4 fade-in">
            <h3 className="text-lg font-bold">6. Finish Report & Media</h3>
 
-           <label className="block text-sm font-bold text-slate-400">Additional Field Notes</label>
-           <textarea 
-             value={formData.notes}
-             onChange={e => setFormData({ ...formData, notes: e.target.value })}
-             rows="3"
-             className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white"
-             placeholder="Include context..."
-           ></textarea>
+
+            <label className="block text-sm font-bold text-slate-400 mt-4">Required Remedial Actions (Recommendations)</label>
+            <input 
+              type="text" 
+              placeholder="Type recommendation and press Space or Enter..."
+              onKeyDown={e => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  e.preventDefault();
+                  const val = e.target.value.trim();
+                  if (val && !formData.recommendations.includes(val)) {
+                    setFormData({ ...formData, recommendations: [...formData.recommendations, val] });
+                    e.target.value = '';
+                  }
+                }
+              }}
+              onBlur={e => {
+                const val = e.target.value.trim();
+                if (val && !formData.recommendations.includes(val)) {
+                   setFormData({ ...formData, recommendations: [...formData.recommendations, val] });
+                   e.target.value = '';
+                }
+              }}
+              className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white"
+            />
+            <div className="flex flex-wrap gap-2 mt-2">
+              {formData.recommendations.map(rec => (
+                <Badge key={rec} type="emerald" className="pl-3 py-1">
+                   {rec} 
+                   <button 
+                     onClick={() => setFormData({ ...formData, recommendations: formData.recommendations.filter(r => r !== rec) })}
+                     className="ml-2 hover:text-white"
+                   >×</button>
+                </Badge>
+              ))}
+              {formData.recommendations.length === 0 && (
+                <p className="text-[10px] text-slate-500 italic">No specific recommendations added yet.</p>
+              )}
+            </div>
+
 
             <label className="block text-sm font-bold text-slate-400 mt-4">Upload Site Media Profiles (Images strictly)</label>
             {isCompressing && (
@@ -740,16 +778,48 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
                disabled={loading || isCompressing}
                className="flex-[1.5] bg-white text-slate-900 p-4 rounded-xl font-black hover:bg-slate-100 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-xs"
              >
-               {loading ? 'Submitting...' : 'Complete Report'}
+               {loading ? 'Submitting...' : 'Next Step →'}
              </button>
            </div>
          </div>
        )}
 
-       {/* Step 7: Finance */}
-       {step === 7 && (
+        {/* Step 7: Other Observations */}
+        {step === 7 && (
+          <div className="space-y-6 fade-in">
+            <div className="flex items-center gap-3">
+               <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400">📝</div>
+               <div>
+                  <h3 className="text-lg font-bold">7. Other Observations</h3>
+                  <p className="text-xs text-slate-400">Capture findings not covered in the standard checklists.</p>
+               </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-slate-900/40 p-4 rounded-xl border border-slate-700/50">
+                 <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 block">Other Field Notes & Observations</label>
+                 <textarea
+                   value={formData.notes}
+                   onChange={e => setFormData({ ...formData, notes: e.target.value })}
+                   className="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-sm focus:ring-2 focus:ring-emerald-500 transition-all text-emerald-50"
+                   placeholder="Write here about unique site conditions, owner feedback, or any other manual entries..."
+                   rows="8"
+                 />
+              </div>
+            </div>
+
+            <div className="flex gap-4 pt-6">
+              <button onClick={() => setStep(6)} className="flex-1 bg-slate-700 p-4 rounded-xl font-bold text-sm">Back</button>
+              <button onClick={() => submitDraft()} className="flex-1 bg-slate-600/50 p-4 rounded-xl font-bold text-sm">Save Progress</button>
+              <button onClick={() => setStep(8)} className="flex-1 bg-white text-slate-900 p-4 rounded-xl font-black text-sm uppercase tracking-widest">Next Step →</button>
+            </div>
+          </div>
+        )}
+
+       {/* Step 8: Finance */}
+       {step === 8 && (
          <div className="space-y-4 fade-in">
-           <h3 className="text-lg font-bold">7. Finance & NCCG Approval</h3>
+           <h3 className="text-lg font-bold">8. Finance & NCCG Approval</h3>
 
            <label className="block text-sm font-bold text-slate-400">Statutory Premise Category</label>
            <select 
@@ -869,7 +939,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
 
            <div className="flex gap-4 pt-6">
              <button
-               onClick={submitFinalStep7}
+               onClick={submitFinalStep8}
                disabled={loading}
                className="w-full bg-emerald-600 text-white shadow p-3 rounded font-bold hover:bg-emerald-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
              >

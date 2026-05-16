@@ -37,7 +37,11 @@ export default function PHOApplications({ profile, onApplied }) {
       if (onApplied) onApplied();
       setResults(results.filter(r => r.id !== businessId));
     } catch (err) {
-      alert("Application failed: " + err.message);
+      let msg = err.message;
+      if (msg.includes('unique') || msg.includes('exists')) {
+        msg = "You have already applied for this business. Please check your 'Active Applications' tab to start the audit.";
+      }
+      alert("Application failed: " + msg);
     } finally {
       setSubmitting(null);
     }

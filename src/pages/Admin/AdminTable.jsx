@@ -225,7 +225,7 @@ export default function AdminTable({ tabType }) {
             ? ['Staff Member', 'Role', 'Company Alignment', 'Zone', 'Status', 'Actions'] 
             : [
                 <input type="checkbox" checked={selectedIds.length === data.length && data.length > 0} onChange={selectAll} className="cursor-pointer" />,
-                'Wait', 'System ID', 'Date', 'Business Target', 'Service', 'Inspector', 'Flags', 'Actions']
+                'Wait', 'System ID', 'Type', 'Date', 'Business Target', 'Service', 'Inspector', 'Flags', 'Actions']
             }
           emptyMessage="No matching records found."
         >
@@ -295,6 +295,11 @@ export default function AdminTable({ tabType }) {
                    })()}
                 </td>
                 <td className="p-4 text-xs font-mono text-slate-600">{item.id.split('-')[0]}</td>
+                <td className="p-4">
+                   <Badge type={item.form_type === 'ipm_audit' ? 'emerald' : 'gray'}>
+                     {item.form_type === 'ipm_audit' ? 'IPM Audit' : 'Standard'}
+                   </Badge>
+                </td>
                 <td className="p-4 text-slate-700">{new Date(item.inspection_date).toLocaleDateString()}</td>
                 <td className="p-4 font-medium text-slate-800">{item.businesses?.business_name || 'N/A'}</td>
                 <td className="p-4 text-xs text-slate-700 font-medium">{item.service_type || 'Routine'}</td>

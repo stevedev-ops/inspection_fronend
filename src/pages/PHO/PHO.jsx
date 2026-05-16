@@ -4,6 +4,7 @@ import nairobiLogo from '/nairobi_logo.png';
 
 // Placeholders for modularization
 import InspectionForm from './InspectionForm';
+import IpmAuditForm from './IpmAuditForm';
 import PHODashboardStats from './PHODashboardStats';
 import PHODrafts from './PHODrafts';
 import PHOActionRequired from './PHOActionRequired';
@@ -12,7 +13,7 @@ import PHOApplications from './PHOApplications';
 
 export default function PHO() {
   const { profile, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState('apply'); // 'apply' | 'new' | 'drafts' | 'issues' | 'archive'
+  const [activeTab, setActiveTab] = useState('apply'); // 'apply' | 'new' | 'ipm' | 'drafts' | 'issues' | 'archive'
   const [selectedDraft, setSelectedDraft] = useState(null);
 
   const handleLogout = () => {
@@ -21,7 +22,11 @@ export default function PHO() {
 
   const onResume = (draft) => {
     setSelectedDraft(draft);
-    setActiveTab('new');
+    if (draft.form_type === 'ipm_audit') {
+        setActiveTab('ipm');
+    } else {
+        setActiveTab('new');
+    }
   };
 
   return (
@@ -54,6 +59,13 @@ export default function PHO() {
             className={`pho-tab ${activeTab === 'new' ? 'active' : ''}`}
           >
             📋 Inspection Form
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('ipm')}
+            className={`pho-tab ${activeTab === 'ipm' ? 'active' : ''}`}
+          >
+            📊 IPM Audit
           </button>
           <button
             type="button"
@@ -90,6 +102,17 @@ export default function PHO() {
 
           {activeTab === 'new' && (
             <InspectionForm
+              profile={profile}
+              initialData={selectedDraft}
+              onComplete={() => {
+                setSelectedDraft(null);
+                setActiveTab('archive');
+              }}
+            />
+          )}
+
+          {activeTab === 'ipm' && (
+            <IpmAuditForm
               profile={profile}
               initialData={selectedDraft}
               onComplete={() => {

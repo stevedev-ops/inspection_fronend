@@ -48,7 +48,9 @@ export default function PHODrafts({ profile, onResume }) {
                  <p className="text-[10px] text-slate-500 font-mono italic">{item.businesses?.permit_no || 'DRAFT'}</p>
               </td>
               <td className="p-4">
-                 <Badge type="gray">{item.service_type || 'Routine Inspection'}</Badge>
+                 <Badge type={item.form_type === 'ipm_audit' ? 'emerald' : 'gray'}>
+                   {item.form_type === 'ipm_audit' ? 'IPM Audit' : (item.service_type || 'Routine Inspection')}
+                 </Badge>
               </td>
               <td className="p-4">
                 <button 

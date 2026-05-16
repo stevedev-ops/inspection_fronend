@@ -147,10 +147,9 @@ export default function NccgTable({ tabType }) {
         </div>
       )}
 
-      <Table 
         headers={[
           <input type="checkbox" checked={selectedIds.length === data.length && data.length > 0} onChange={selectAll} className="cursor-pointer" />,
-          'Wait', 'Business', 'Inspector', 'Service', 'Status', 'Actions'
+          'Wait', 'Business', 'Type', 'Inspector', 'Service', 'Status', 'Actions'
         ]}
         emptyMessage="No reports matching this criteria."
       >
@@ -171,6 +170,11 @@ export default function NccgTable({ tabType }) {
                })()}
             </td>
             <td className="p-4 font-medium text-slate-900">{item.businesses?.business_name || 'N/A'}</td>
+            <td className="p-4">
+               <Badge type={item.form_type === 'ipm_audit' ? 'emerald' : 'gray'}>
+                 {item.form_type === 'ipm_audit' ? 'IPM Audit' : 'Standard'}
+               </Badge>
+            </td>
             <td className="p-4 text-sm text-slate-800 font-semibold">{item.inspector_name}</td>
             <td className="p-4 text-xs text-slate-700 font-medium">{item.service_type || 'Routine'}</td>
             <td className="p-4 text-xs">

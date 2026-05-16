@@ -107,6 +107,71 @@ export default function ReportViewerModal({
            </div>
         </div>
 
+        {/* IPM Specialized Data */}
+        {inspection.form_type === 'ipm_audit' && inspection.ipm_data && (
+          <div className="space-y-6">
+            <section className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+              <h4 className="text-xs font-bold text-emerald-700 uppercase mb-3 border-b border-emerald-200 pb-1">IPM Compliance Assessment</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                {[
+                  { key: 'licensed_operator', label: 'Licensed Operator' },
+                  { key: 'pcpb_license', label: 'PCPB License' },
+                  { key: 'service_reports', label: 'Service Reports' },
+                  { key: 'sds_available', label: 'SDS Available' },
+                  { key: 'sightings_logbook', label: 'Sightings Logbook' },
+                  { key: 'staff_safety', label: 'Staff Safety' },
+                  { key: 'ppe_usage', label: 'PPE Usage' },
+                  { key: 'chemical_storage', label: 'Chem. Storage' },
+                  { key: 'routine_monitoring', label: 'Routine Monitoring' },
+                  { key: 'infestation_observed', label: 'Infestation Observed' },
+                  { key: 'corrective_actions', label: 'Corrective Actions' },
+                ].map(item => (
+                  <div key={item.key} className="flex justify-between items-center text-xs border-b border-emerald-100/50 py-1">
+                    <span className="text-slate-600 font-medium">{item.label}</span>
+                    <Badge type={inspection.ipm_data.compliance?.[item.key] ? 'green' : 'red'}>
+                      {inspection.ipm_data.compliance?.[item.key] ? 'YES' : 'NO'}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+              {inspection.ipm_data.compliance?.infestation_details && (
+                <div className="mt-3 p-2 bg-white rounded border border-emerald-100 text-xs text-slate-700 italic">
+                  <strong>Infestation Details:</strong> {inspection.ipm_data.compliance.infestation_details}
+                </div>
+              )}
+            </section>
+
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <h4 className="text-xs font-bold text-slate-600 uppercase mb-3 border-b border-slate-200 pb-1">Monitoring Devices</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { key: 'rodent_bait_stations', label: 'Rodent Stations' },
+                    { key: 'fly_catchers', label: 'Fly Catchers' },
+                    { key: 'cockroach_traps', label: 'Cockroach Traps' },
+                    { key: 'other_devices', label: 'Other Devices' },
+                  ].map(item => (
+                    <div key={item.key} className="text-center">
+                      <p className="text-[9px] text-slate-500 font-bold uppercase">{item.label}</p>
+                      <p className="text-lg font-black text-slate-800">{inspection.ipm_data.monitoring_devices?.[item.key] || 0}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <h4 className="text-xs font-bold text-slate-600 uppercase mb-3 border-b border-slate-200 pb-1">Sanitation & Summary</h4>
+                <div className="space-y-1 text-xs">
+                  <p><span className="text-slate-500 font-medium">Vegetation:</span> {inspection.ipm_data.sanitation?.vegetation_management || '—'}</p>
+                  <p><span className="text-slate-500 font-medium">Lighting/Vent.:</span> {inspection.ipm_data.sanitation?.lighting_ventilation || '—'}</p>
+                  <p><span className="text-slate-500 font-medium">Audit Status:</span> <span className="font-bold text-emerald-600">{inspection.ipm_data.summary?.status || '—'}</span></p>
+                  <p><span className="text-slate-500 font-medium">Responsible:</span> {inspection.ipm_data.summary?.responsible_person || '—'}</p>
+                  <p><span className="text-slate-500 font-medium">Timeline:</span> {inspection.ipm_data.summary?.timeline || '—'}</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
         {/* Vectors & Infestations */}
         <section>
           <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Vector Sighting Log</h4>

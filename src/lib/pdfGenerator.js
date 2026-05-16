@@ -146,6 +146,58 @@ export async function generateInspectionPDF(reportData) {
             doc.text(nextDate, margin + 48, y);
             y += 8;
         }
+
+        // IPM Specialized Data Section
+        if (reportData.form_type === 'ipm_audit' && reportData.ipm_data) {
+            const ipm = reportData.ipm_data;
+            
+            sectionBar('IPM COMPLIANCE ASSESSMENT');
+            const compliance = ipm.compliance || {};
+            const items = [
+                { key: 'licensed_operator', label: 'Licensed Operator' },
+                { key: 'pcpb_license', label: 'PCPB License' },
+                { key: 'service_reports', label: 'Service Reports' },
+                { key: 'sds_available', label: 'SDS Available' },
+                { key: 'sightings_logbook', label: 'Sightings Logbook' },
+                { key: 'staff_safety', label: 'Staff Safety' },
+                { key: 'ppe_usage', label: 'PPE Usage' },
+                { key: 'chemical_storage', label: 'Chem. Storage' },
+                { key: 'routine_monitoring', label: 'Routine Monitoring' },
+                { key: 'infestation_observed', label: 'Infestation Observed' },
+                { key: 'corrective_actions', label: 'Corrective Actions' },
+            ];
+
+            // Render in 2 columns
+            for (let i = 0; i < items.length; i += 2) {
+                const it1 = items[i];
+                const it2 = items[i+1];
+                row(
+                    it1.label + ':', compliance[it1.key] ? 'YES' : 'NO', 
+                    it2 ? pageW / 2 : null, 
+                    it2 ? it2.label + ':' : null, 
+                    it2 ? (compliance[it2.key] ? 'YES' : 'NO') : null
+                );
+            }
+            if (compliance.infestation_details) {
+                row('Infest. Details:', compliance.infestation_details);
+            }
+            y += 2;
+
+            sectionBar('MONITORING DEVICES');
+            const devices = ipm.monitoring_devices || {};
+            row('Rodent Stations:', devices.rodent_bait_stations || 0, pageW / 2, 'Fly Catchers:', devices.fly_catchers || 0);
+            row('Cockroach Traps:', devices.cockroach_traps || 0, pageW / 2, 'Other Devices:', devices.other_devices || 0);
+            y += 2;
+
+            sectionBar('IPM SANITATION & SUMMARY');
+            const sanitation = ipm.sanitation || {};
+            const summary = ipm.summary || {};
+            row('Vegetation Mgmt:', sanitation.vegetation_management || '—');
+            row('Lighting/Vent.:', sanitation.lighting_ventilation || '—');
+            row('Audit Status:', summary.status || '—', pageW / 2, 'Responsible:', summary.responsible_person || '—');
+            row('Timeline:', summary.timeline || '—');
+            y += 2;
+        }
         
         // Fee Split Box
         checkPage(20);
@@ -169,57 +221,59 @@ export async function generateInspectionPDF(reportData) {
         
         y += 18;
 
-        sectionBar('AREAS & PEST TYPES');
-        row('Areas Affect.:', (reportData.areas_affected || []).join(', ') || '—');
-        row('Pests Targeted:', (reportData.pest_types || []).join(', ') || '—');
-        y += 2;
+        if (reportData.form_type !== 'ipm_audit') {
+            sectionBar('AREAS & PEST TYPES');
+            row('Areas Affect.:', (reportData.areas_affected || []).join(', ') || '—');
+            row('Pests Targeted:', (reportData.pest_types || []).join(', ') || '—');
+            y += 2;
 
-        sectionBar('CHEMICALS & METHODS');
-        if (reportData.chemical_dosages?.length > 0) {
-            checkPage(15);
-            doc.setFontSize(7.5);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(...GRAY);
-            doc.text('CHEMICAL NAME', margin, y);
-            doc.text('DOSAGE / DILUTION', margin + usableW / 2, y);
-            y += 4;
-            doc.setDrawColor(226, 232, 240);
-            doc.line(margin, y, margin + usableW, y);
-            y += 5;
-            
-            reportData.chemical_dosages.forEach(d => {
-                checkPage(6);
-                doc.setFontSize(8);
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(...DARK);
-                doc.text(String(d.chemical), margin, y);
-                doc.setFont('helvetica', 'italic');
-                doc.text(String(d.dosage || '—'), margin + usableW / 2, y);
-                y += 5.5;
-            });
-            y += 4;
-        } else {
-            bullets(reportData.chemicals_used);
-        }
-        row('Treat. Methods:', (reportData.treatment_methods || []).join(', ') || '—');
-        y += 2;
-
-        sectionBar('SANITATION ASSESSMENT');
-        row('Housekeeping:', reportData.housekeeping_rating || '—', pageW / 2, 'Waste Mgmt:', reportData.waste_management_rating || '—');
-        row('Stacking:', reportData.stacking_rating || '—', pageW / 2, 'Overall Sanit.:', reportData.overall_sanitation_rating || '—');
-        
-        if (reportData.pest_sightings) {
-            const sightings = [];
-            const ps = reportData.pest_sightings;
-            if (ps.rodents) sightings.push("Rodents");
-            if (ps.bedbugs) sightings.push(`Bedbugs (Count: ${ps.bedbug_count || 'Unspecified'})`);
-            if (ps.other) sightings.push(ps.other_description || "Other Pests");
-            
-            if (sightings.length > 0) {
-                row('Sightings Det:', sightings.join(', '));
+            sectionBar('CHEMICALS & METHODS');
+            if (reportData.chemical_dosages?.length > 0) {
+                checkPage(15);
+                doc.setFontSize(7.5);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...GRAY);
+                doc.text('CHEMICAL NAME', margin, y);
+                doc.text('DOSAGE / DILUTION', margin + usableW / 2, y);
+                y += 4;
+                doc.setDrawColor(226, 232, 240);
+                doc.line(margin, y, margin + usableW, y);
+                y += 5;
+                
+                reportData.chemical_dosages.forEach(d => {
+                    checkPage(6);
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...DARK);
+                    doc.text(String(d.chemical), margin, y);
+                    doc.setFont('helvetica', 'italic');
+                    doc.text(String(d.dosage || '—'), margin + usableW / 2, y);
+                    y += 5.5;
+                });
+                y += 4;
+            } else {
+                bullets(reportData.chemicals_used);
             }
+            row('Treat. Methods:', (reportData.treatment_methods || []).join(', ') || '—');
+            y += 2;
+
+            sectionBar('SANITATION ASSESSMENT');
+            row('Housekeeping:', reportData.housekeeping_rating || '—', pageW / 2, 'Waste Mgmt:', reportData.waste_management_rating || '—');
+            row('Stacking:', reportData.stacking_rating || '—', pageW / 2, 'Overall Sanit.:', reportData.overall_sanitation_rating || '—');
+            
+            if (reportData.pest_sightings) {
+                const sightings = [];
+                const ps = reportData.pest_sightings;
+                if (ps.rodents) sightings.push("Rodents");
+                if (ps.bedbugs) sightings.push(`Bedbugs (Count: ${ps.bedbug_count || 'Unspecified'})`);
+                if (ps.other) sightings.push(ps.other_description || "Other Pests");
+                
+                if (sightings.length > 0) {
+                    row('Sightings Det:', sightings.join(', '));
+                }
+            }
+            y += 2;
         }
-        y += 2;
 
         if (reportData.issues_found?.length > 0) {
             sectionBar('OBSERVED ISSUES');

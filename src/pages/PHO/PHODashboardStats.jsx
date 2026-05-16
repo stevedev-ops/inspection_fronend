@@ -33,7 +33,7 @@ export default function PHODashboardStats({ profile }) {
   }, [profile]);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
        <div style={{ backgroundColor: '#0f172a', padding: '1rem', borderRadius: '1rem', border: '1px solid #334155', textAlign: 'center' }}>
            <h3 style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Drafts</h3>
            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f8fafc' }}>{stats.drafts}</div>
@@ -49,6 +49,18 @@ export default function PHODashboardStats({ profile }) {
        <div style={{ backgroundColor: '#0f172a', padding: '1rem', borderRadius: '1rem', border: '1px solid #334155', textAlign: 'center' }}>
            <h3 style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Approved</h3>
            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10b981' }}>{stats.approved}</div>
+       </div>
+       <div style={{ backgroundColor: '#0f172a', padding: '1rem', borderRadius: '1rem', border: '1px solid #334155', textAlign: 'center' }}>
+           <h3 style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Flagged</h3>
+           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f43f5e' }}>{stats.flagged}</div>
+       </div>
+       <div style={{ backgroundColor: '#0f172a', padding: '1rem', borderRadius: '1rem', border: '1px solid #334155', textAlign: 'center' }}>
+           <h3 style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Revenue (25%)</h3>
+           <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#38bdf8' }}>KES {stats.govt_revenue.toLocaleString()}</div>
+       </div>
+       <div style={{ backgroundColor: '#0f172a', padding: '1rem', borderRadius: '1rem', border: '1px solid #334155', textAlign: 'center' }}>
+           <h3 style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Vendor (75%)</h3>
+           <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#818cf8' }}>KES {stats.vendor_revenue.toLocaleString()}</div>
        </div>
     </div>
   );

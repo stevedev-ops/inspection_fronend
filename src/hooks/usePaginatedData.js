@@ -26,6 +26,11 @@ export function usePaginatedData({
   const parsedFilters = useMemo(() => {
     try { return JSON.parse(normalizedFilters); } catch { return {}; }
   }, [normalizedFilters]);
+  
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(0);
+  }, [normalizedFilters]);
 
   const fetchData = useCallback(async () => {
     if (skip) {
