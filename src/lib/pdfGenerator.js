@@ -104,7 +104,10 @@ export async function generateInspectionPDF(reportData) {
         doc.setFont('helvetica', 'bold');
         doc.text('NAIROBI CITY GOVERNMENT', pageW / 2, 42, { align: 'center' });
         doc.setFontSize(10);
-        doc.text('INTEGRATED PEST CONTROL MANAGEMENT AUDIT REPORT', pageW / 2, 48, { align: 'center' });
+        const mainTitle = reportData.form_type === 'ipm_audit' 
+            ? 'INTEGRATED PEST CONTROL MANAGEMENT AUDIT REPORT' 
+            : 'OFFICIAL BUSINESS INSPECTION REPORT';
+        doc.text(mainTitle, pageW / 2, 48, { align: 'center' });
         
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
@@ -275,9 +278,15 @@ export async function generateInspectionPDF(reportData) {
             y += 2;
         }
 
-        if (reportData.issues_found?.length > 0) {
-            sectionBar('OBSERVED ISSUES');
-            bullets(reportData.issues_found);
+        if (reportData.form_type !== 'ipm_audit') {
+            if (reportData.issues_found?.length > 0) {
+                sectionBar('OBSERVED ISSUES');
+                bullets(reportData.issues_found);
+                y += 2;
+            }
+        } else {
+            sectionBar('AUDIT COMPLIANCE RESULT');
+            row('Final Status:', reportData.ipm_data?.summary?.status || '—', pageW / 2, 'Responsible:', reportData.ipm_data?.summary?.responsible_person || '—');
             y += 2;
         }
 

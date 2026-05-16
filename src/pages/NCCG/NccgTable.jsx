@@ -146,7 +146,7 @@ export default function NccgTable({ tabType }) {
           </div>
         </div>
       )}
-
+      <Table
         headers={[
           <input type="checkbox" checked={selectedIds.length === data.length && data.length > 0} onChange={selectAll} className="cursor-pointer" />,
           'Wait', 'Business', 'Type', 'Inspector', 'Service', 'Status', 'Actions'

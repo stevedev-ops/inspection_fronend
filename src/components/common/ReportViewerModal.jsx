@@ -22,7 +22,11 @@ export default function ReportViewerModal({
     : `/verify/${encodeURIComponent(verificationCode)}`;
 
   return (
-    <Modal isOpen={!!inspection} onClose={onClose} title={`Inspection Report: ${b.business_name || 'Generic'}`}>
+    <Modal 
+      isOpen={!!inspection} 
+      onClose={onClose} 
+      title={inspection.form_type === 'ipm_audit' ? `IPM Audit Report: ${b.business_name || 'Generic'}` : `Inspection Report: ${b.business_name || 'Generic'}`}
+    >
       <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2 text-slate-900">
         
         {/* Header Summary */}
@@ -72,39 +76,55 @@ export default function ReportViewerModal({
               </section>
             </div>
 
-           <div className="space-y-4">
-              <section>
-                <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Sanitation Assessment</h4>
-                <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-bold">
-                   <div className="bg-slate-100 p-2 rounded">
-                      <p className="text-slate-600">HOUSEKEEPING</p>
-                      <p className="text-sm text-slate-900">{inspection.housekeeping_rating || '—'}</p>
-                   </div>
-                   <div className="bg-slate-100 p-2 rounded">
-                      <p className="text-slate-600">WASTE MGMT</p>
-                      <p className="text-sm text-slate-900">{inspection.waste_management_rating || '—'}</p>
-                   </div>
-                   <div className="bg-slate-100 p-2 rounded">
-                      <p className="text-slate-600">STACKING</p>
-                      <p className="text-sm text-slate-900">{inspection.stacking_rating || '—'}</p>
-                   </div>
-                   <div className="bg-emerald-50 p-2 rounded border border-emerald-200">
-                      <p className="text-emerald-700">OVERALL</p>
-                      <p className="text-sm text-emerald-800 font-bold">{inspection.overall_sanitation_rating || '—'}</p>
-                   </div>
-                </div>
-              </section>
+            {inspection.form_type !== 'ipm_audit' && (
+              <div className="space-y-4">
+                <section>
+                  <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Sanitation Assessment</h4>
+                  <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-bold">
+                    <div className="bg-slate-100 p-2 rounded">
+                        <p className="text-slate-600">HOUSEKEEPING</p>
+                        <p className="text-sm text-slate-900">{inspection.housekeeping_rating || '—'}</p>
+                    </div>
+                    <div className="bg-slate-100 p-2 rounded">
+                        <p className="text-slate-600">WASTE MGMT</p>
+                        <p className="text-sm text-slate-900">{inspection.waste_management_rating || '—'}</p>
+                    </div>
+                    <div className="bg-slate-100 p-2 rounded">
+                        <p className="text-slate-600">STACKING</p>
+                        <p className="text-sm text-slate-900">{inspection.stacking_rating || '—'}</p>
+                    </div>
+                    <div className="bg-emerald-50 p-2 rounded border border-emerald-200">
+                        <p className="text-emerald-700">OVERALL</p>
+                        <p className="text-sm text-emerald-800 font-bold">{inspection.overall_sanitation_rating || '—'}</p>
+                    </div>
+                  </div>
+                </section>
 
-              <section>
-                <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Payment & Fees</h4>
-                <div className="text-sm space-y-1 text-slate-900">
-                  <p><span className="text-slate-600">Assessed Fee:</span> KES {Number(inspection.calculated_fee || 0).toLocaleString()}</p>
-                  <p><span className="text-slate-600">Received:</span> KES {Number(inspection.amount_paid || 0).toLocaleString()}</p>
-                  <p><span className="text-slate-600">Method:</span> {inspection.payment_method || '—'}</p>
-                  <p><span className="text-slate-600">Ref:</span> <span className="font-mono text-xs text-slate-900 font-bold">{inspection.payment_ref || '—'}</span></p>
-                </div>
-              </section>
-           </div>
+                <section>
+                  <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Payment & Fees</h4>
+                  <div className="text-sm space-y-1 text-slate-900">
+                    <p><span className="text-slate-600">Assessed Fee:</span> KES {Number(inspection.calculated_fee || 0).toLocaleString()}</p>
+                    <p><span className="text-slate-600">Received:</span> KES {Number(inspection.amount_paid || 0).toLocaleString()}</p>
+                    <p><span className="text-slate-600">Method:</span> {inspection.payment_method || '—'}</p>
+                    <p><span className="text-slate-600">Ref:</span> <span className="font-mono text-xs text-slate-900 font-bold">{inspection.payment_ref || '—'}</span></p>
+                  </div>
+                </section>
+              </div>
+            )}
+            
+            {inspection.form_type === 'ipm_audit' && (
+              <div className="space-y-4">
+                 <section>
+                  <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Audit Fees & Billing</h4>
+                  <div className="text-sm space-y-1 text-slate-900">
+                    <p><span className="text-slate-600">Total Audit Fee:</span> KES {Number(inspection.ipm_audit || inspection.calculated_fee || 0).toLocaleString()}</p>
+                    <p><span className="text-slate-600">Payment Status:</span> <Badge type={inspection.is_paid ? 'green' : 'amber'}>{inspection.is_paid ? 'PAID' : 'PENDING'}</Badge></p>
+                    <p><span className="text-slate-600">Method:</span> {inspection.payment_method || '—'}</p>
+                    <p><span className="text-slate-600">Ref:</span> <span className="font-mono text-xs text-slate-900 font-bold">{inspection.payment_ref || '—'}</span></p>
+                  </div>
+                </section>
+              </div>
+            )}
         </div>
 
         {/* IPM Specialized Data */}
@@ -172,89 +192,95 @@ export default function ReportViewerModal({
           </div>
         )}
 
-        {/* Vectors & Infestations */}
-        <section>
-          <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Vector Sighting Log</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className={`p-4 rounded-xl border ${inspection.pest_sightings?.rodents ? 'bg-rose-50 border-rose-200' : 'bg-slate-100 border-slate-200'}`}>
-              <p className="text-[10px] font-bold text-slate-600 uppercase">Rodents</p>
-              <p className="text-sm font-bold text-slate-900">{inspection.pest_sightings?.rodents ? '✓ DETECTED' : 'NONE'}</p>
-            </div>
-            <div className={`p-4 rounded-xl border ${inspection.pest_sightings?.bedbugs ? 'bg-rose-50 border-rose-200' : 'bg-slate-100 border-slate-200'}`}>
-              <p className="text-[10px] font-bold text-slate-600 uppercase">Bedbugs</p>
-              <div className="flex justify-between items-end">
-                <p className="text-sm font-bold text-slate-900">{inspection.pest_sightings?.bedbugs ? '✓ DETECTED' : 'NONE'}</p>
-                {inspection.pest_sightings?.bedbug_count && (
-                  <span className="text-xs font-mono text-rose-600 font-bold bg-white px-1.5 rounded">{inspection.pest_sightings.bedbug_count} units</span>
-                )}
+        {/* Vectors & Infestations - Only for Standard Inspection */}
+        {inspection.form_type !== 'ipm_audit' && (
+          <section>
+            <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Vector Sighting Log</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className={`p-4 rounded-xl border ${inspection.pest_sightings?.rodents ? 'bg-rose-50 border-rose-200' : 'bg-slate-100 border-slate-200'}`}>
+                <p className="text-[10px] font-bold text-slate-600 uppercase">Rodents</p>
+                <p className="text-sm font-bold text-slate-900">{inspection.pest_sightings?.rodents ? '✓ DETECTED' : 'NONE'}</p>
+              </div>
+              <div className={`p-4 rounded-xl border ${inspection.pest_sightings?.bedbugs ? 'bg-rose-50 border-rose-200' : 'bg-slate-100 border-slate-200'}`}>
+                <p className="text-[10px] font-bold text-slate-600 uppercase">Bedbugs</p>
+                <div className="flex justify-between items-end">
+                  <p className="text-sm font-bold text-slate-900">{inspection.pest_sightings?.bedbugs ? '✓ DETECTED' : 'NONE'}</p>
+                  {inspection.pest_sightings?.bedbug_count && (
+                    <span className="text-xs font-mono text-rose-600 font-bold bg-white px-1.5 rounded">{inspection.pest_sightings.bedbug_count} units</span>
+                  )}
+                </div>
+              </div>
+              <div className={`p-4 rounded-xl border ${inspection.pest_sightings?.other ? 'bg-amber-50 border-amber-200' : 'bg-slate-100 border-slate-200'}`}>
+                <p className="text-[10px] font-bold text-slate-600 uppercase">Other Vectors</p>
+                <p className="text-sm font-bold text-slate-900">{inspection.pest_sightings?.other ? (inspection.pest_sightings.other_description || 'DETECTED') : 'NONE'}</p>
+              </div>
+              <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
+                <p className="text-[10px] font-bold text-slate-600 uppercase">Target Pests</p>
+                <div className="flex flex-wrap gap-1 mt-1">
+                    {targetPests.map(p => (
+                      <span key={p} className="text-[10px] font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600">{p}</span>
+                    ))}
+                    {targetPests.length === 0 && <span className="text-[10px] text-slate-500">None recorded</span>}
+                </div>
               </div>
             </div>
-            <div className={`p-4 rounded-xl border ${inspection.pest_sightings?.other ? 'bg-amber-50 border-amber-200' : 'bg-slate-100 border-slate-200'}`}>
-              <p className="text-[10px] font-bold text-slate-600 uppercase">Other Vectors</p>
-              <p className="text-sm font-bold text-slate-900">{inspection.pest_sightings?.other ? (inspection.pest_sightings.other_description || 'DETECTED') : 'NONE'}</p>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
-               <p className="text-[10px] font-bold text-slate-600 uppercase">Target Pests</p>
-               <div className="flex flex-wrap gap-1 mt-1">
-                  {targetPests.map(p => (
-                    <span key={p} className="text-[10px] font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600">{p}</span>
+          </section>
+        )}
+
+        {/* Areas & Logic - Only for Standard Inspection */}
+        {inspection.form_type !== 'ipm_audit' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section>
+                <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Treatment Zones</h4>
+                <div className="flex flex-wrap gap-1">
+                  {treatedAreas.map(a => (
+                    <span key={a} className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">{a}</span>
                   ))}
-                  {targetPests.length === 0 && <span className="text-[10px] text-slate-500">None recorded</span>}
-               </div>
-            </div>
+                  {treatedAreas.length === 0 && <span className="text-[10px] text-slate-500">None recorded</span>}
+                </div>
+            </section>
+            <section>
+                <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Methodology</h4>
+                <div className="flex flex-wrap gap-1">
+                  {controlMethods.map(m => (
+                    <span key={m} className="text-[10px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-100">{m}</span>
+                  ))}
+                  {controlMethods.length === 0 && <span className="text-[10px] text-slate-500">None recorded</span>}
+                </div>
+            </section>
           </div>
-        </section>
+        )}
 
-        {/* Areas & Logic */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <section>
-              <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Treatment Zones</h4>
-              <div className="flex flex-wrap gap-1">
-                {treatedAreas.map(a => (
-                  <span key={a} className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">{a}</span>
-                ))}
-                {treatedAreas.length === 0 && <span className="text-[10px] text-slate-500">None recorded</span>}
-              </div>
-           </section>
-           <section>
-              <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Methodology</h4>
-              <div className="flex flex-wrap gap-1">
-                {controlMethods.map(m => (
-                  <span key={m} className="text-[10px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-100">{m}</span>
-                ))}
-                {controlMethods.length === 0 && <span className="text-[10px] text-slate-500">None recorded</span>}
-              </div>
-           </section>
-        </div>
-
-        {/* Chemical Matrix */}
-        <section>
-          <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Chemical Deployment Matrix</h4>
-          <div className="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 text-slate-900">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="px-3 py-2">Chemical Name</th>
-                  <th className="px-3 py-2 text-right">Dosage / Dilution</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {inspection.chemical_dosages?.length > 0 ? (
-                  inspection.chemical_dosages.map((d, i) => (
-                    <tr key={i}>
-                      <td className="px-3 py-2 font-medium">{d.chemical}</td>
-                      <td className="px-3 py-2 text-right text-slate-600 italic font-mono">{d.dosage}</td>
-                    </tr>
-                  ))
-                ) : (
+        {/* Chemical Matrix - Only for Standard Inspection */}
+        {inspection.form_type !== 'ipm_audit' && (
+          <section>
+            <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Chemical Deployment Matrix</h4>
+            <div className="bg-slate-50 rounded-lg overflow-hidden border border-slate-200 text-slate-900">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-100">
                   <tr>
-                    <td colSpan="2" className="px-3 py-4 text-center text-slate-600 italic">No specific dosages recorded.</td>
+                    <th className="px-3 py-2">Chemical Name</th>
+                    <th className="px-3 py-2 text-right">Dosage / Dilution</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {inspection.chemical_dosages?.length > 0 ? (
+                    inspection.chemical_dosages.map((d, i) => (
+                      <tr key={i}>
+                        <td className="px-3 py-2 font-medium">{d.chemical}</td>
+                        <td className="px-3 py-2 text-right text-slate-600 italic font-mono">{d.dosage}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="2" className="px-3 py-4 text-center text-slate-600 italic">No specific dosages recorded.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
 
         {/* Evidence Portfolio */}
         <section>
@@ -281,14 +307,24 @@ export default function ReportViewerModal({
         {/* Findings & Recommendations */}
         <section>
            <h4 className="text-xs font-bold text-emerald-600 uppercase mb-2 border-b border-emerald-100 pb-1">Findings & Recommendations</h4>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-3">
-              <div>
-                <p className="text-[10px] font-bold text-slate-600 uppercase mb-1">Observed Issues</p>
-                <div className="flex flex-wrap gap-1">
-                   {observedIssues.map(i => <span key={i} className="text-[10px] bg-rose-50 text-rose-800 px-2 py-0.5 rounded border border-rose-200 font-bold">! {i}</span>)}
-                   {observedIssues.length === 0 && <span className="text-[10px] text-slate-500 font-medium italic">None recorded</span>}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-3">
+              {inspection.form_type !== 'ipm_audit' && (
+                <div>
+                  <p className="text-[10px] font-bold text-slate-600 uppercase mb-1">Observed Issues</p>
+                  <div className="flex flex-wrap gap-1">
+                    {observedIssues.map(i => <span key={i} className="text-[10px] bg-rose-50 text-rose-800 px-2 py-0.5 rounded border border-rose-200 font-bold">! {i}</span>)}
+                    {observedIssues.length === 0 && <span className="text-[10px] text-slate-500 font-medium italic">None recorded</span>}
+                  </div>
                 </div>
-              </div>
+              )}
+              {inspection.form_type === 'ipm_audit' && (
+                <div>
+                  <p className="text-[10px] font-bold text-slate-600 uppercase mb-1">Audit Compliance Result</p>
+                  <Badge type={inspection.ipm_data?.summary?.status === 'Compliant' ? 'green' : 'red'}>
+                    {inspection.ipm_data?.summary?.status || 'NOT_EVALUATED'}
+                  </Badge>
+                </div>
+              )}
               <div>
                 <p className="text-[10px] font-bold text-slate-600 uppercase mb-1">Official Advice</p>
                 <div className="flex flex-wrap gap-1">
@@ -305,19 +341,22 @@ export default function ReportViewerModal({
         {/* Action Controls (Injectable) */}
         {actions && (
           <div className="pt-6 border-t border-slate-200 mt-6 space-y-2">
-             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Internal Notes / Mismatch Reason</label>
+             <div className="flex justify-between items-end mb-1">
+               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Internal Notes / Decline Reason</label>
+               {!actions.notes && <span className="text-[9px] font-black text-rose-500 uppercase animate-pulse">Required for Decline</span>}
+             </div>
              <textarea 
                value={actions.notes}
                onChange={e => actions.setNotes(e.target.value)}
-               className="w-full border border-slate-300 rounded-lg p-3 text-sm bg-white text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none"
-               placeholder="Provide specific details for the PHO..."
+               className={`w-full border rounded-lg p-3 text-sm bg-white text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-colors ${!actions.notes ? 'border-rose-300 bg-rose-50/30' : 'border-slate-300'}`}
+               placeholder="Provide specific details for the PHO on why this is being declined..."
                rows="3"
              ></textarea>
              <div className="flex gap-4">
                 <button 
                   onClick={actions.onReject} 
-                  disabled={actions.loading}
-                  className="flex-1 bg-white border border-rose-500 text-rose-600 font-bold py-3 rounded-lg hover:bg-rose-50 disabled:opacity-50"
+                  disabled={actions.loading || !actions.notes}
+                  className="flex-1 bg-white border border-rose-500 text-rose-600 font-bold py-3 rounded-lg hover:bg-rose-50 disabled:opacity-30 disabled:grayscale transition-all"
                 >
                   Decline to PHO
                 </button>
