@@ -48,6 +48,7 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
       summary: {
         status: 'Compliant', // Compliant, Partially Compliant, Non-Compliant
         responsible_person: '',
+        responsible_person_phone: '',
         timeline: '',
       }
     },
@@ -294,7 +295,7 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
           </div>
 
           <div className="bg-slate-900 border border-slate-700 p-4 rounded-lg mb-4">
-            <label className="block text-sm font-bold text-slate-400 mb-2">People on Ground</label>
+            <label className="block text-sm font-bold text-slate-400 mb-2">Participants</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
               <input
                 type="text"
@@ -500,12 +501,12 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
           <h3 className="text-lg font-bold">5. Summary & Media</h3>
           
           <div className="space-y-4">
-             <label className="text-sm font-bold text-slate-400">Recommended Actions (Space separated)</label>
+             <label className="text-sm font-bold text-slate-400">Recommended Actions (Press Enter to add)</label>
              <input 
                type="text" 
-               placeholder="Type and press Space..."
+               placeholder="Type and press Enter..."
                onKeyDown={e => {
-                 if (e.key === ' ' || e.key === 'Enter') {
+                 if (e.key === 'Enter') {
                    e.preventDefault();
                    const val = e.target.value.trim();
                    if (val && !formData.recommendations.includes(val)) {
@@ -533,7 +534,7 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
              </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-400 uppercase">Compliance Status</label>
               <select
@@ -547,6 +548,19 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
               </select>
             </div>
             <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-400 uppercase">Timeline for Improvements</label>
+              <input
+                type="text"
+                value={formData.ipm_data.summary.timeline}
+                onChange={e => handleSummaryChange('timeline', e.target.value)}
+                className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-sm"
+                placeholder="e.g. 14 Days"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
               <label className="text-xs font-bold text-slate-400 uppercase">Responsible Person</label>
               <input
                 type="text"
@@ -556,17 +570,16 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
                 placeholder="Manager/Owner Name"
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-400 uppercase">Timeline for Improvements</label>
-            <input
-              type="text"
-              value={formData.ipm_data.summary.timeline}
-              onChange={e => handleSummaryChange('timeline', e.target.value)}
-              className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-sm"
-              placeholder="e.g. 14 Days"
-            />
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-400 uppercase">Responsible Person Phone</label>
+              <input
+                type="text"
+                value={formData.ipm_data.summary.responsible_person_phone || ''}
+                onChange={e => handleSummaryChange('responsible_person_phone', e.target.value)}
+                className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-sm"
+                placeholder="e.g. 0700123456"
+              />
+            </div>
           </div>
 
           <div className="space-y-4">
