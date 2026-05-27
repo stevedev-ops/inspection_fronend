@@ -15,6 +15,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
      inspector_name: profile?.full_name || '',
      inspection_date: new Date().toISOString().slice(0,16),
      personnel: [],
+     people_on_ground: [],
      next_inspection_date: '',
      service_type: '',
      areas_affected: [],
@@ -52,6 +53,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState('');
   const [searchError, setSearchError] = useState('');
+  const [newPerson, setNewPerson] = useState({ name: '', phone: '', company: '' });
   useEffect(() => {
     if (initialData) {
       setInspectionId(initialData.id);
@@ -197,6 +199,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
         next_inspection_date: formData.next_inspection_date || null,
         service_type: formData.service_type,
         personnel: formData.personnel,
+        people_on_ground: formData.people_on_ground,
         areas_affected: formData.areas_affected,
         pest_types: formData.pest_types,
         chemicals_used: formData.chemicals_used,
@@ -292,6 +295,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
           ...prev,
           media: [],
           personnel: [],
+          people_on_ground: [],
           areas_affected: [],
           pest_types: [],
           chemicals_used: [],
@@ -408,6 +412,61 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
                 </div>
               </div>
             )}
+
+            <div className="mt-4 bg-slate-900 border border-slate-700 p-4 rounded-lg">
+              <label className="block text-sm font-bold text-slate-400 mb-2">People on Ground</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={newPerson.name}
+                  onChange={e => setNewPerson({ ...newPerson, name: e.target.value })}
+                  className="bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white"
+                />
+                <input
+                  type="text"
+                  placeholder="Phone Number"
+                  value={newPerson.phone}
+                  onChange={e => setNewPerson({ ...newPerson, phone: e.target.value })}
+                  className="bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white"
+                />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  value={newPerson.company}
+                  onChange={e => setNewPerson({ ...newPerson, company: e.target.value })}
+                  className="bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (newPerson.name) {
+                    setFormData(prev => ({ ...prev, people_on_ground: [...prev.people_on_ground, newPerson] }));
+                    setNewPerson({ name: '', phone: '', company: '' });
+                  }
+                }}
+                className="bg-emerald-600/20 text-emerald-400 border border-emerald-600 hover:bg-emerald-600 hover:text-white px-3 py-1 rounded text-xs font-bold transition-all"
+              >
+                + Add Person
+              </button>
+              {formData.people_on_ground && formData.people_on_ground.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {formData.people_on_ground.map((p, idx) => (
+                    <div key={idx} className="flex justify-between items-center bg-slate-800 p-2 rounded text-xs border border-slate-700">
+                      <div>
+                        <p className="font-bold text-white">{p.name}</p>
+                        <p className="text-slate-400">{p.phone} • {p.company}</p>
+                      </div>
+                      <button
+                        onClick={() => setFormData(prev => ({ ...prev, people_on_ground: prev.people_on_ground.filter((_, i) => i !== idx) }))}
+                        className="text-rose-400 hover:text-rose-300 font-bold"
+                      >×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <label className="block text-sm font-bold text-slate-400 mt-4">Personnel (Space separated)</label>
             <input 
