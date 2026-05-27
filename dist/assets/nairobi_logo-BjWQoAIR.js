@@ -1,0 +1,1 @@
+var e=`/nairobi_logo.png`;export{e as t};
