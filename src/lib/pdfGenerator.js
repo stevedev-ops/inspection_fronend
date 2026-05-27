@@ -135,6 +135,12 @@ export async function generateInspectionPDF(reportData) {
         sectionBar('INSPECTION DETAILS');
         row('Date & Time:', dateStr, pageW / 2, 'Lead PHO:', reportData.inspector_name);
         row('Personnel:', (reportData.personnel || []).join(', ') || 'Lead only');
+        
+        const participantsStr = reportData.people_on_ground?.length > 0 
+            ? reportData.people_on_ground.map(p => `${p.name}${p.phone ? ` (${p.phone})` : ''}`).join(', ') 
+            : 'None';
+        row('Participants:', participantsStr);
+
         row('Service Type:', reportData.service_type || '—', pageW / 2, 'Total Fee:', `KES ${Number(reportData.calculated_fee || 0).toLocaleString()}`);
         
         if (reportData.next_inspection_date) {
@@ -198,7 +204,7 @@ export async function generateInspectionPDF(reportData) {
             row('Vegetation Mgmt:', sanitation.vegetation_management || '—');
             row('Lighting/Vent.:', sanitation.lighting_ventilation || '—');
             row('Audit Status:', summary.status || '—', pageW / 2, 'Responsible:', summary.responsible_person || '—');
-            row('Timeline:', summary.timeline || '—');
+            row('Resp. Phone:', summary.responsible_person_phone || '—', pageW / 2, 'Timeline:', summary.timeline || '—');
             y += 2;
         }
         
@@ -287,6 +293,7 @@ export async function generateInspectionPDF(reportData) {
         } else {
             sectionBar('AUDIT COMPLIANCE RESULT');
             row('Final Status:', reportData.ipm_data?.summary?.status || '—', pageW / 2, 'Responsible:', reportData.ipm_data?.summary?.responsible_person || '—');
+            row('Resp. Phone:', reportData.ipm_data?.summary?.responsible_person_phone || '—');
             y += 2;
         }
 

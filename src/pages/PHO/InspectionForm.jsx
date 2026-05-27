@@ -414,7 +414,7 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
             )}
 
             <div className="mt-4 bg-slate-900 border border-slate-700 p-4 rounded-lg">
-              <label className="block text-sm font-bold text-slate-400 mb-2">People on Ground</label>
+              <label className="block text-sm font-bold text-slate-400 mb-2">Participants</label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
                 <input
                   type="text"
@@ -468,12 +468,12 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
               )}
             </div>
 
-            <label className="block text-sm font-bold text-slate-400 mt-4">Personnel (Space separated)</label>
+            <label className="block text-sm font-bold text-slate-400 mt-4">Personnel (Press Enter to add)</label>
             <input 
               type="text" 
-              placeholder="Type name and press Space..."
+              placeholder="Type name and press Enter..."
               onKeyDown={e => {
-                if (e.key === ' ' || e.key === 'Enter') {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   const val = e.target.value.trim();
                   if (val && !formData.personnel.includes(val)) {
@@ -703,9 +703,9 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
             <label className="block text-sm font-bold text-slate-400 mt-4">Required Remedial Actions (Recommendations)</label>
             <input 
               type="text" 
-              placeholder="Type recommendation and press Space or Enter..."
+              placeholder="Type recommendation and press Enter..."
               onKeyDown={e => {
-                if (e.key === ' ' || e.key === 'Enter') {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   const val = e.target.value.trim();
                   if (val && !formData.recommendations.includes(val)) {

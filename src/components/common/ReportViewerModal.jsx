@@ -62,6 +62,12 @@ export default function ReportViewerModal({
                   <p><span className="text-slate-600 font-medium">Building/Street:</span> {b.building_name || '—'} {b.street_name || ''}</p>
                   <p><span className="text-slate-600 font-medium">Lead PHO:</span> {inspection.inspector_name}</p>
                   <p><span className="text-slate-600 font-medium">Assisting:</span> {inspection.personnel?.join(', ') || 'None'}</p>
+                  <p>
+                    <span className="text-slate-600 font-medium">Participants:</span>{' '}
+                    {inspection.people_on_ground?.length > 0 
+                      ? inspection.people_on_ground.map(p => `${p.name}${p.phone ? ` (${p.phone})` : ''}`).join(', ') 
+                      : 'None'}
+                  </p>
                   <p><span className="text-slate-600 font-medium">Service:</span> {inspection.service_type}</p>
                 </div>
               </section>
@@ -185,6 +191,7 @@ export default function ReportViewerModal({
                   <p><span className="text-slate-500 font-medium">Lighting/Vent.:</span> {inspection.ipm_data.sanitation?.lighting_ventilation || '—'}</p>
                   <p><span className="text-slate-500 font-medium">Audit Status:</span> <span className="font-bold text-emerald-600">{inspection.ipm_data.summary?.status || '—'}</span></p>
                   <p><span className="text-slate-500 font-medium">Responsible:</span> {inspection.ipm_data.summary?.responsible_person || '—'}</p>
+                  <p><span className="text-slate-500 font-medium">Resp. Phone:</span> {inspection.ipm_data.summary?.responsible_person_phone || '—'}</p>
                   <p><span className="text-slate-500 font-medium">Timeline:</span> {inspection.ipm_data.summary?.timeline || '—'}</p>
                 </div>
               </div>
