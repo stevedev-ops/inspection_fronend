@@ -739,38 +739,79 @@ export default function InspectionForm({ profile, initialData, onComplete }) {
             </div>
 
 
-            <label className="block text-sm font-bold text-slate-400 mt-4">Upload Site Media Profiles (Images strictly)</label>
+            <label className="block text-sm font-bold text-slate-400 mt-4 mb-2">Upload Site Media Profiles (Images strictly)</label>
             {isCompressing && (
               <div className="flex items-center gap-2 mb-2 text-emerald-400 animate-pulse">
                 <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                 <span className="text-xs font-bold uppercase tracking-wider">Optimizing evidence files...</span>
               </div>
             )}
-            <input 
-              type="file" 
-              multiple
-              accept="image/*"
-              disabled={isCompressing}
-              onChange={async e => {
-                try {
-                  setIsCompressing(true);
-                  const files = Array.from(e.target.files);
-                  const processed = [];
-                  for (const f of files) {
-                    const compressed = await compressImage(f);
-                    processed.push({ file: compressed, caption: '', issue: '', topology: '' });
-                  }
-                  setFormData(prev => ({ ...prev, media: [...prev.media, ...processed] }));
-                } catch (err) {
-                  console.error("Compression error:", err);
-                  const fallback = Array.from(e.target.files).map(f => ({ file: f, caption: '', issue: '', topology: '' }));
-                  setFormData(prev => ({ ...prev, media: [...prev.media, ...fallback] }));
-                } finally {
-                  setIsCompressing(false);
-                }
-              }}
-              className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-slate-300 font-mono text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-emerald-500 file:text-white disabled:opacity-50"
-            />
+            <div className="flex gap-4">
+              <label className={`flex-1 bg-slate-900 border border-slate-600 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-800 transition ${isCompressing ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                <span className="text-2xl block mb-2">📸</span>
+                <span className="text-white text-sm font-bold block">Take Photo</span>
+                <span className="text-[10px] text-slate-400">Use camera</span>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  capture="environment"
+                  disabled={isCompressing}
+                  className="hidden"
+                  onChange={async e => {
+                    if (!e.target.files.length) return;
+                    try {
+                      setIsCompressing(true);
+                      const files = Array.from(e.target.files);
+                      const processed = [];
+                      for (const f of files) {
+                        const compressed = await compressImage(f);
+                        processed.push({ file: compressed, caption: '', issue: '', topology: '' });
+                      }
+                      setFormData(prev => ({ ...prev, media: [...prev.media, ...processed] }));
+                    } catch (err) {
+                      console.error("Compression error:", err);
+                      const fallback = Array.from(e.target.files).map(f => ({ file: f, caption: '', issue: '', topology: '' }));
+                      setFormData(prev => ({ ...prev, media: [...prev.media, ...fallback] }));
+                    } finally {
+                      setIsCompressing(false);
+                      e.target.value = '';
+                    }
+                  }}
+                />
+              </label>
+              <label className={`flex-1 bg-slate-900 border border-slate-600 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-800 transition ${isCompressing ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                <span className="text-2xl block mb-2">📁</span>
+                <span className="text-white text-sm font-bold block">Upload Files</span>
+                <span className="text-[10px] text-slate-400">Choose from gallery</span>
+                <input 
+                  type="file" 
+                  multiple
+                  accept="image/*"
+                  disabled={isCompressing}
+                  className="hidden"
+                  onChange={async e => {
+                    if (!e.target.files.length) return;
+                    try {
+                      setIsCompressing(true);
+                      const files = Array.from(e.target.files);
+                      const processed = [];
+                      for (const f of files) {
+                        const compressed = await compressImage(f);
+                        processed.push({ file: compressed, caption: '', issue: '', topology: '' });
+                      }
+                      setFormData(prev => ({ ...prev, media: [...prev.media, ...processed] }));
+                    } catch (err) {
+                      console.error("Compression error:", err);
+                      const fallback = Array.from(e.target.files).map(f => ({ file: f, caption: '', issue: '', topology: '' }));
+                      setFormData(prev => ({ ...prev, media: [...prev.media, ...fallback] }));
+                    } finally {
+                      setIsCompressing(false);
+                      e.target.value = '';
+                    }
+                  }}
+                />
+              </label>
+            </div>
             
             {formData.media.length > 0 && (
               <div className="space-y-3 mt-4">

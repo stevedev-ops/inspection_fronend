@@ -584,21 +584,64 @@ export default function IpmAuditForm({ profile, initialData, onComplete }) {
 
           <div className="space-y-4">
              <label className="text-sm font-bold text-slate-400">Site Evidence (Photos)</label>
-             <input 
-               type="file" multiple accept="image/*"
-               onChange={async e => {
-                 setIsCompressing(true);
-                 const files = Array.from(e.target.files);
-                 const processed = [];
-                 for (const f of files) {
-                   const compressed = await compressImage(f);
-                   processed.push({ file: compressed, caption: '' });
-                 }
-                 setFormData(prev => ({ ...prev, media: [...prev.media, ...processed] }));
-                 setIsCompressing(false);
-               }}
-               className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-xs"
-             />
+             {isCompressing && (
+               <div className="flex items-center gap-2 text-emerald-400 animate-pulse">
+                 <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                 <span className="text-xs font-bold uppercase tracking-wider">Optimizing evidence files...</span>
+               </div>
+             )}
+             <div className="flex gap-4">
+               <label className={`flex-1 bg-slate-900 border border-slate-600 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-800 transition ${isCompressing ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                 <span className="text-2xl block mb-2">📸</span>
+                 <span className="text-white text-sm font-bold block">Take Photo</span>
+                 <span className="text-[10px] text-slate-400">Use camera</span>
+                 <input 
+                   type="file" 
+                   accept="image/*"
+                   capture="environment"
+                   disabled={isCompressing}
+                   className="hidden"
+                   onChange={async e => {
+                     if (!e.target.files.length) return;
+                     setIsCompressing(true);
+                     const files = Array.from(e.target.files);
+                     const processed = [];
+                     for (const f of files) {
+                       const compressed = await compressImage(f);
+                       processed.push({ file: compressed, caption: '' });
+                     }
+                     setFormData(prev => ({ ...prev, media: [...prev.media, ...processed] }));
+                     setIsCompressing(false);
+                     e.target.value = ''; // Reset
+                   }}
+                 />
+               </label>
+               <label className={`flex-1 bg-slate-900 border border-slate-600 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-800 transition ${isCompressing ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                 <span className="text-2xl block mb-2">📁</span>
+                 <span className="text-white text-sm font-bold block">Upload Files</span>
+                 <span className="text-[10px] text-slate-400">Choose from gallery</span>
+                 <input 
+                   type="file" 
+                   multiple 
+                   accept="image/*"
+                   disabled={isCompressing}
+                   className="hidden"
+                   onChange={async e => {
+                     if (!e.target.files.length) return;
+                     setIsCompressing(true);
+                     const files = Array.from(e.target.files);
+                     const processed = [];
+                     for (const f of files) {
+                       const compressed = await compressImage(f);
+                       processed.push({ file: compressed, caption: '' });
+                     }
+                     setFormData(prev => ({ ...prev, media: [...prev.media, ...processed] }));
+                     setIsCompressing(false);
+                     e.target.value = ''; // Reset
+                   }}
+                 />
+               </label>
+             </div>
              <div className="flex gap-2 overflow-x-auto pb-2">
                {formData.media.map((m, idx) => (
                  <div key={idx} className="relative w-20 h-20 flex-shrink-0">
